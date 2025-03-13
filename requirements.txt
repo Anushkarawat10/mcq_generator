@@ -75,7 +75,6 @@ pypdfium2==4.30.1
 python-dateutil==2.9.0.post0
 python-docx==1.1.2
 python-slugify==8.0.4
-pywin32==308
 pyzmq==26.2.0
 requests==2.32.3
 rsa==4.9
