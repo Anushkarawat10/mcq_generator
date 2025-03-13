@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Results </title>
+    <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        padding: 40px;
+        color: #fff;
+    }
+    
+    .container {
+        width: 70%;
+        margin: auto;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+    }
+    
+    .container:hover {
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    h1 {
+        text-align: center;
+        color: #f8f9fa;
+        font-size: 28px;
+        margin-bottom: 25px;
+        letter-spacing: 1px;
+    }
+    
+    .mcq {
+        margin-bottom: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .mcq:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.02);
+    }
+    
+    .question {
+        font-weight: bold;
+        font-size: 18px;
+        color: #ffdd57;
+        margin-bottom: 12px;
+    }
+    
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    
+    .option:hover {
+        background: rgba(255, 255, 255, 0.4);
+        transform: translateX(5px);
+    }
+    
+    /* Custom Stylish Radio Buttons */
+    .option input {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        transition: 0.3s;
+    }
+    
+    .option input:checked {
+        background: #ffdd57;
+        border-color: #ffdd57;
+    }
+    
+    .correct-answer {
+        display: none;
+        font-weight: bold;
+        color: #900c64;
+        margin-top: 15px;
+        font-size: 16px;
+    }
+    
+    /* Button Styling */
+    a {
+        display: block;
+        text-align: center;
+        padding: 12px 20px;
+        background: #ffdd57;
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: 0.3s ease-in-out;
+        font-size: 16px;
+    }
+    
+    a:hover {
+        background: #ffcc00;
+        transform: scale(1.05);
+    }
+</style>
+    
+</head>
+<body>
+    <div class="class container">
+        <h1>Generated MCQs</h1>
+        {% for mcq in mcqs.split("## MCQ") %}
+            {% if mcq.strip() %}
+                <div class="mcq">
+                    <div class="question">{{ mcq.split('A)')[0].strip() }}</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="mcq{{ loop.index }}" data-correct="{{ 'true' if 'A)' + mcq.split('A)')[1].split('Correct Answer:')[0].strip() in mcq.split('Correct Answer:')[1] else 'false' }}">
+                            A) {{ mcq.split('A)')[1].split('B)')[0].strip() }}
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="mcq{{ loop.index }}" data-correct="{{ 'true' if 'B)' + mcq.split('B)')[1].split('Correct Answer:')[0].strip() in mcq.split('Correct Answer:')[1] else 'false' }}">
+                            B) {{ mcq.split('B)')[1].split('C)')[0].strip() }}
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="mcq{{ loop.index }}" data-correct="{{ 'true' if 'C)' + mcq.split('C)')[1].split('Correct Answer:')[0].strip() in mcq.split('Correct Answer:')[1] else 'false' }}">
+                            C) {{ mcq.split('C)')[1].split('D)')[0].strip() }}
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="mcq{{ loop.index }}" data-correct="{{ 'true' if 'D)' + mcq.split('D)')[1].split('Correct Answer:')[0].strip() in mcq.split('Correct Answer:')[1] else 'false' }}">
+                            D) {{ mcq.split('D)')[1].split('Correct Answer:')[0].strip() }}
+                        </label>
+                    </div>
+                    <div class="correct-answer">✅ Correct Answer: {{ mcq.split('Correct Answer:')[1].strip() }}</div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+
+        <a href="c:\\Users\\Anushka\\Desktop\\2nd yr\\project\\mcq generator\\results/generated_mcqs_AnushkaRawat.pdf{{ txt_filename }}">Download as TXT</a>
+        <a href="c:\\Users\\Anushka\\Desktop\\2nd yr\\project\\mcq generator\\results/generated_mcqs_AnushkaRawat.pdf{{ pdf_filename }}">Download as PDF</a>
+    </div>
+    <script>
+        document.querySelectorAll('.mcq').forEach(mcq => {
+    let options = mcq.querySelectorAll('.option input');
+    let correctAnswer = mcq.querySelector('.correct-answer');
+
+    options.forEach(option => {
+        option.addEventListener('change', () => {
+            // Show the correct answer when any option is selected
+            correctAnswer.style.display = 'block';
+
+            // Disable further selections after choosing one
+            options.forEach(opt => opt.disabled = true);
+
+            // Highlight correct and incorrect answers
+            if (option.dataset.correct === "true") {
+                option.parentElement.style.color = "green"; // Correct in green
+            } else {
+                option.parentElement.style.color = "red"; // Incorrect in red
+            }
+        });
+    });
+});
+
+    </script>
+
+</body>
+</html>
